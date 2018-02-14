@@ -25,6 +25,7 @@ class Sticky {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
+    this.wrapPlaceholder = null;
 
     this.options = {
       wrap: options.wrap || false,
@@ -106,8 +107,21 @@ class Sticky {
    * @param {node} element - Element to be wrapped
    */
   wrapElement(element) {
-    element.insertAdjacentHTML('beforebegin', '<span></span>');
+    this.wrapPlaceholder = element.insertAdjacentElement('beforebegin', document.createElement('span'));
     element.previousSibling.appendChild(element);
+  }
+
+
+  /**
+   * Destroy the wrap placeholder element
+   * @function
+   */
+  destroyWrapPlaceholder() {
+    if (!this.wrapPlaceholder) {
+      return;
+    }
+
+    this.wrapPlaceholder.parentNode.removeChild(this.wrapPlaceholder);
   }
 
 
@@ -323,6 +337,7 @@ class Sticky {
     this.forEach(this.elements, (element) => {
       this.destroyResizeEvents(element);
       this.destroyScrollEvents(element);
+      this.destroyWrapPlaceholder();
       delete element.sticky;
     });
    }

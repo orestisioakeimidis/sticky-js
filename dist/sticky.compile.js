@@ -31,6 +31,7 @@ var Sticky = function () {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
+    this.wrapPlaceholder = null;
 
     this.options = {
       wrap: options.wrap || false,
@@ -123,8 +124,22 @@ var Sticky = function () {
 
 
   Sticky.prototype.wrapElement = function wrapElement(element) {
-    element.insertAdjacentHTML('beforebegin', '<span></span>');
+    this.wrapPlaceholder = element.insertAdjacentElement('beforebegin', document.createElement('span'));
     element.previousSibling.appendChild(element);
+  };
+
+  /**
+   * Destroy the wrap placeholder element
+   * @function
+   */
+
+
+  Sticky.prototype.destroyWrapPlaceholder = function destroyWrapPlaceholder() {
+    if (!this.wrapPlaceholder) {
+      return;
+    }
+
+    this.wrapPlaceholder.parentNode.removeChild(this.wrapPlaceholder);
   };
 
   /**
@@ -343,6 +358,7 @@ var Sticky = function () {
     this.forEach(this.elements, function (element) {
       _this6.destroyResizeEvents(element);
       _this6.destroyScrollEvents(element);
+      _this6.destroyWrapPlaceholder();
       delete element.sticky;
     });
   };
@@ -458,7 +474,9 @@ var Sticky = function () {
   if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define([], function () {
+      return factory;
+    });
   } else {
     root.Sticky = factory;
   }
