@@ -291,12 +291,12 @@ var Sticky = function () {
         position: 'fixed',
         top: element.sticky.rect.top + 'px',
         left: element.sticky.rect.left + 'px',
-        width: this.vp.width + 'px'
+        width: element.sticky.rect.width + 'px'
       });
     } else if (this.scrollTop > element.sticky.rect.top - element.sticky.marginTop) {
       this.css(element, {
         position: 'fixed',
-        width: this.vp.width + 'px',
+        width: element.sticky.rect.width + 'px',
         left: element.sticky.rect.left + 'px'
       });
 
