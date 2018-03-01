@@ -281,7 +281,7 @@ var Sticky = function () {
     if (element.sticky.wrap) {
       this.css(element.parentNode, {
         display: 'block',
-        width: element.sticky.rect.width + 'px',
+        width: this.vp.width + 'px',
         height: element.sticky.rect.height + 'px'
       });
     }
@@ -291,12 +291,12 @@ var Sticky = function () {
         position: 'fixed',
         top: element.sticky.rect.top + 'px',
         left: element.sticky.rect.left + 'px',
-        width: element.sticky.rect.width + 'px'
+        width: this.vp.width + 'px'
       });
     } else if (this.scrollTop > element.sticky.rect.top - element.sticky.marginTop) {
       this.css(element, {
         position: 'fixed',
-        width: element.sticky.rect.width + 'px',
+        width: this.vp.width + 'px',
         left: element.sticky.rect.left + 'px'
       });
 
