@@ -259,7 +259,7 @@ class Sticky {
     if (element.sticky.wrap) {
       this.css(element.parentNode, {
         display: 'block',
-        width: this.vp.width + 'px',
+        width: '100%',
         height: element.sticky.rect.height + 'px',
       });
     }
@@ -272,14 +272,23 @@ class Sticky {
         position: 'fixed',
         top: element.sticky.rect.top + 'px',
         left: element.sticky.rect.left + 'px',
-        width: (element.sticky.wrap ? this.vp.width : element.sticky.rect.width) + 'px',
+        width: element.sticky.rect.width + 'px',
       });
     } else if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
       this.css(element, {
         position: 'fixed',
-        width: (element.sticky.wrap ? this.vp.width : element.sticky.rect.width) + 'px',
         left: element.sticky.rect.left + 'px',
       });
+
+      if (element.sticky.wrap) {
+        this.css(element, {
+          right: '0px',
+        });
+      } else {
+        this.css(element, {
+          width: element.sticky.rect.width + 'px',
+        });
+      }
 
       if (
         (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop)
