@@ -31,7 +31,7 @@ var Sticky = function () {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
-    this.wrapPlaceholder = null;
+    this.wrapIndex = 1;
 
     this.options = {
       wrap: options.wrap || false,
@@ -124,8 +124,10 @@ var Sticky = function () {
 
 
   Sticky.prototype.wrapElement = function wrapElement(element) {
-    this.wrapPlaceholder = element.insertAdjacentElement('beforebegin', document.createElement('span'));
+    element.insertAdjacentHTML('beforebegin', '<span class="wrap-' + this.wrapIndex + '"></span>');
     element.previousSibling.appendChild(element);
+    element.setAttribute('wrap-id', this.wrapIndex);
+    this.wrapIndex++;
   };
 
   /**
@@ -134,12 +136,20 @@ var Sticky = function () {
    */
 
 
-  Sticky.prototype.destroyWrapPlaceholder = function destroyWrapPlaceholder() {
-    if (!this.wrapPlaceholder) {
+  Sticky.prototype.destroyWrapPlaceholder = function destroyWrapPlaceholder(element) {
+    var wrapId = element.getAttribute('wrap-id');
+
+    if (!wrapId) {
       return;
     }
 
-    this.wrapPlaceholder.parentNode.removeChild(this.wrapPlaceholder);
+    var wrapElement = document.querySelector('.wrap-' + wrapId);
+
+    if (!wrapElement) {
+      return;
+    }
+
+    wrapElement.parentNode.removeChild(wrapElement);
   };
 
   /**
@@ -367,7 +377,7 @@ var Sticky = function () {
     this.forEach(this.elements, function (element) {
       _this6.destroyResizeEvents(element);
       _this6.destroyScrollEvents(element);
-      _this6.destroyWrapPlaceholder();
+      _this6.destroyWrapPlaceholder(element);
       delete element.sticky;
     });
   };

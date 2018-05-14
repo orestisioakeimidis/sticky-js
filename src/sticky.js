@@ -25,7 +25,7 @@ class Sticky {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
-    this.wrapPlaceholder = null;
+    this.wrapIndex = 1;
 
     this.options = {
       wrap: options.wrap || false,
@@ -107,8 +107,10 @@ class Sticky {
    * @param {node} element - Element to be wrapped
    */
   wrapElement(element) {
-    this.wrapPlaceholder = element.insertAdjacentElement('beforebegin', document.createElement('span'));
+    element.insertAdjacentHTML('beforebegin', `<span class="wrap-${this.wrapIndex}"></span>`);
     element.previousSibling.appendChild(element);
+    element.setAttribute('wrap-id', this.wrapIndex);
+    this.wrapIndex++;
   }
 
 
@@ -116,12 +118,20 @@ class Sticky {
    * Destroy the wrap placeholder element
    * @function
    */
-  destroyWrapPlaceholder() {
-    if (!this.wrapPlaceholder) {
+  destroyWrapPlaceholder(element) {
+    const wrapId = element.getAttribute('wrap-id');
+
+    if (!wrapId) {
       return;
     }
 
-    this.wrapPlaceholder.parentNode.removeChild(this.wrapPlaceholder);
+    const wrapElement = document.querySelector(`.wrap-${wrapId}`);
+
+    if (!wrapElement) {
+      return;
+    }
+
+    wrapElement.parentNode.removeChild(wrapElement);
   }
 
 
@@ -346,7 +356,7 @@ class Sticky {
     this.forEach(this.elements, (element) => {
       this.destroyResizeEvents(element);
       this.destroyScrollEvents(element);
-      this.destroyWrapPlaceholder();
+      this.destroyWrapPlaceholder(element);
       delete element.sticky;
     });
    }
